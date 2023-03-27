@@ -1,0 +1,47 @@
+
+= gitea docs
+
+== install
+
+=== mysql
+
+[source,shell]
+----
+
+CREATE USER 'gitea' IDENTIFIED BY 'gitea';
+
+CREATE DATABASE gitea CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
+
+GRANT ALL PRIVILEGES ON gitea.* TO 'gitea';
+FLUSH PRIVILEGES;
+
+----
+
+=== docker
+
+[source,yaml]
+----
+version: "3"
+
+networks:
+  gitea:
+    external: false
+
+services:
+  server:
+    image: gitea/gitea
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: unless-stopped
+    networks:
+      - gitea
+    volumes:
+      - ./data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "22:22"
+----
